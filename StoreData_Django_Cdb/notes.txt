@@ -1,0 +1,124 @@
+//USE PY 3.11 VERSION ONLY, 3.12 DOESNT SUPPORT SOME DEPENDENCY REQ BY CASSANDRA-DRIVER
+
+py-0 to list out the versions
+
+py -3.11 -m venv venv
+
+//DOCKER ASSIGNS NEW IP EVERYTIME A CONTAINER STARTS
+
+//packages to be installed: requests, cassandra-driver, django
+use this to store packages: pip freeze > requirements.txt 
+
+
+to create a django file
+create virtual env: python -m venv envname
+ activate it: environmentname: venv/scripts/activate
+install django: pip install Django 
+create a project: django-admin startproject projectname
+navigate to the project: cd projectname
+run the server: python manage.py runserver
+create an app: python manage.py startapp appname
+
+
+//CASSANDRA
+install cassandra-driver: 
+"Cassandra driver for Python" is a software library that allows Python applications to interact with and access data stored in 
+an Apache Cassandra database, enabling you to perform operations like reading, writing, and
+ querying data within your Python code by sending commands to the Cassandra server using the Cassandra Query Language (CQL) directly.  
+
+use this to fetch IPAddress of the container
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_id> 
+
+run this to open cassandra shell
+docker exec -it containername cqlsh            =  docker exec -it cassdb cqlsh -u cassandra -p cassandra
+DESCRIBE KEYSPACES;
+USE keyspaceName;
+DESCRIBE TABLES;
+
+
+
+PS D:\MajorProject\fullstackProject\fetch data using django> docker exec -it cassdb cqlsh -u cassandra -p cassandra
+
+Warning: Using a password on the command line interface can be insecure.
+Recommendation: use the credentials file to securely provide the password.
+
+Connected to My Cluster at 127.0.0.1:9042
+[cqlsh 6.2.0 | Cassandra 5.0.3 | CQL spec 3.4.7 | Native protocol v5]
+Use HELP for help.
+cassandra@cqlsh> use aqdata
+   ... ;
+cassandra@cqlsh:aqdata> describe tables;
+
+pm25
+
+cassandra@cqlsh:aqdata> select * from pm25;
+
+ date       | avg_pm25 | location                                                     | max_pm25 | min_pm25
+------------+----------+--------------------------------------------------------------+----------+----------
+ 2025-03-04 |      123 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |      159 |       89
+ 2025-03-07 |      111 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |      138 |       89
+ 2025-03-05 |      115 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |      138 |       89
+ 2025-03-01 |      138 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |      138 |      132
+ 2025-03-08 |      131 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |      138 |       89
+ 2025-03-03 |      138 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |      138 |      138
+ 2025-03-06 |       89 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |       95 |       68
+ 2025-03-02 |      138 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |      138 |      138
+ 2025-02-28 |      139 | Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास) |      158 |      138
+
+(9 rows)
+
+
+
+//NOTES
+Apache cassandra is a nosql, distributed db.
+Cassandra deployments handle massive amounts of structured data and provide high availability with no single point of failure. 
+To achieve this, Cassandra optimizes queries and arranges its smallest logical units, nodes, in a ring architecture formation.
+A Cassandra cluster is a collection of nodes, or Cassandra instances, visualized as a ring.
+
+Given that Apache Cassandra features were architected with horizontal scalability in mind, 
+Cassandra can scale to a theoretically unlimited number of nodes in a cluster, and Cassandra 
+clusters can be geographically dispersed unlike rdms(they do it to ensure C in CAP(consistency)) and
+redis(to ensure low latency),with data exchanged between clusters using multi-datacenter replication.
+
+In Cassandra a node is either a whole physical server, or an allocated portion of a physical server in a virtualized or containerized environment. 
+Each node will have requisite processing power (CPUs), memory (RAM), and storage (usually  as SSDs).
+
+These nodes are organized into clusters. Cassandra clusters can be in physical proximity (such as in the same datacenter), or can be distributed over great geographical distances.
+ To organize clusters into datacenters and then also across different racks (to ensure high availability), Cassandra uses a snitch monitor.
+eventual synchronize between replicated clusters exists.
+
+Within a Cassandra cluster, there is no central primary (or master) node. All nodes in the cluster are peers. 
+There are mechanisms, such as the Gossip protocol to determine when the cluster is first started for nodes to discover each other.
+This same Gossip mechanism helps to determine when additional nodes are added to the cluster, or when nodes are removed from the cluster
+
+keyspace= database
+
+
+
+
+SPARK
+>docker run -d --name sparkapp -p 7077:7077 -p 8080:8080 bitnami/spark:latest
+db8346de9ab4c283974e7c2dc172183eb263e6377b51941bac3f71e1576b39eb
+ 
+ 
+
+DOCKER COMPOSE USE, NOT NETWORK AS-
+It automatically manages networking.
+Containers can talk to each other using service names.
+It's easy to manage, scale, and deploy.
+
+IN DOCKER NTW, CONTAINERS MUST BE INDIVIDUALLY STARTED, IP ADDRESSES MUST BE CHANGED EVERYTIME 
+
+
+
+
+"date","avg_pm25","location","max_pm25","min_pm25"
+"2025-03-04","124","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","138","89"
+"2025-03-10","89","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","89","89"
+"2025-03-07","96","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","122","68"
+"2025-03-05","118","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","138","89"
+"2025-03-08","115","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","138","89"
+"2025-03-03","138","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","138","138"
+"2025-03-09","114","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","138","89"
+"2025-03-06","87","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","89","68"
+"2025-03-02","138","Hyderabad US Consulate, India (हैदराबाद अमेरिकी वाणिज्य दूतावास)","138","138"

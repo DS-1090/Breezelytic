@@ -1,0 +1,83 @@
+ 
+
+services:
+  django:
+    image: djangoapp:latest
+    container_name: djangoapp
+    depends_on:
+      cassdb:
+        condition: service_healthy
+       
+    environment:
+      CASSANDRA_HOST: cassdb
+      SPARK_MASTER: sparkapp
+    networks:
+      - aqinet
+    ports:
+      - "8000:8000"
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+    - D:/MajorProject/fullstackProject/StoreData_Django_Cdb/fetchData:/app
+
+  cassdb:
+      image: bitnami/cassandra:latest
+      container_name: cassdb
+      ports:
+        - "9042:9042"
+      networks:
+        - aqinet
+      environment:
+        - CASSANDRA_PASSWORD_SEEDER=yes
+        - CASSANDRA_USER=admin
+        - CASSANDRA_PASSWORD=admin
+      volumes:
+        - cassandra_data:/bitnami/cassandra
+      healthcheck:
+        test: ["CMD-SHELL", "cqlsh -u admin -p admin -e 'DESCRIBE KEYSPACES' || exit 1"]
+        interval: 60s
+        timeout: 10s
+        retries: 5
+
+
+  sparkapp:
+    image: bitnami/spark:latest
+    container_name: sparkapp
+    command: [ "/opt/bitnami/spark/bin/spark-class", "org.apache.spark.deploy.master.Master", "--host", "sparkapp" ]
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+    depends_on:
+      cassdb:
+        condition: service_healthy
+    networks:
+      - aqinet
+     
+
+
+  spark-worker:
+    image: bitnami/spark:latest
+    container_name: spark-worker
+    command: [ "/opt/bitnami/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://sparkapp:7077" ]
+    depends_on:
+      - sparkapp
+    networks:
+      - aqinet
+
+networks:
+  aqinet:
+    driver: bridge
+
+volumes:
+  cassandra_data:
+
+
+#output
+
+# PS D:\MajorProject\fullstackProject> docker-compose up -d  
+# [+] Running 6/6
+#  ✔ Network fullstackproject_aqinet           Created                                                                                  0.2s 
+#  ✔ Volume "fullstackproject_cassandra_data"  Created                                                                                  0.1s 
+#  ✔ Container cassdb                          Healthy                                                                                125.4s 
+#  ✔ Container djangoapp                       Started                                                                                125.9s 
+#  ✔ Container sparkapp                        Started                                                                                125.8s 
+#  ✔ Container spark-worker                    Started 
