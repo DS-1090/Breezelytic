@@ -1,7 +1,7 @@
 import requests
 from django.http import JsonResponse
 import csv
-api_key= "579af2f50a3f2c8cf6fc4b1479917cc8f62babc3"
+api_key= ""
 
 headers = {
     'Content-Type': 'application/json',
