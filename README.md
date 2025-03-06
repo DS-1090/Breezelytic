@@ -13,7 +13,7 @@ This project is also an exploration of big data handling technologies.
 
 ### Key Features:
 - **Real-time PM2.5 Data**: Retrieves air quality information from the API of `https://aqicn.org/`.
-- **Historical & Forecast Data**: Stores past records and predicts future values.
+- **Historical & Forecast Data**: Stores past records and  future values.
 - **Docker Compose Network**: Orchestrates Django, Spark, and Cassandra services efficiently.
 - **Scalable Architecture**: Supports large-scale data processing with Spark and Cassandra.
 
