@@ -38,7 +38,7 @@ The system operates as follows:
 ## Setup & Installation
 ### Prerequisites
 Ensure you have the following installed on your system:
-- Docker & Docker Compose
+- Docker
 - Python & Django
 - Flutter SDK
 - Apache Spark
