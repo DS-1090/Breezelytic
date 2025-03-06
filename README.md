@@ -70,7 +70,7 @@ Ensure you have the following installed on your system:
 ## Future Improvements
 - **Redis/MySQL Integration**: Implement caching to enable faster access to past records.
 - **Kafka Integration**: Utilize Apache Kafka for direct and automated storage of PM2.5 records in Cassandra, eliminating manual intervention.
-- **Enhanced Spark Processing**: Optimize Spark jobs for better performance.
+- **Enhanced Spark Processing**: Expand data processing capabilities using Spark 
 
 ## Spark Web
 ![Spark Web](https://github.com/user-attachments/assets/94f55e09-195e-42b4-856e-b3cc0c316cd9)
