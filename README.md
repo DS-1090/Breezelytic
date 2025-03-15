@@ -30,7 +30,7 @@ The system operates as follows:
 1. The **mobile app (Flutter)** requests PM2.5 data records from the **Django backend**.
 2. **Apache Spark** processes and retrieves records from Cassandra for historical data access.
 3. The data is then sent back to the mobile app for display.
-4. Django fetches real-time data from `https://aqicn.org/` and stores it in **Cassandra**.
+4. Django fetches records data from `https://aqicn.org/` and stores it in **Cassandra**.
 5. All services communicate within the **Docker Compose Network** (`aqinet`).
 
 ![Workflow](https://github.com/user-attachments/assets/a672c044-86f1-4701-ad57-c7a123ba0dec)
